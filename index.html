@@ -216,6 +216,14 @@ section.blk + section.blk{border-top:1px solid var(--line)}
 .pubrow .aut b{color:var(--fg)}
 .pubrow .ven{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;
   color:var(--fg-3);margin-top:6px}
+.card .pubtitle{font-size:1.15rem;line-height:1.34;margin:2px 0 0;letter-spacing:-.015em}
+.card .pubtitle a:hover{color:var(--accent)}
+.card p.aut{font-size:14.5px;margin-top:11px;color:var(--fg-2)}
+.card p.aut b{color:var(--fg);font-weight:600}
+.card p.ven{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--fg-3);margin-top:9px}
+/* cards hug their content instead of stretching to the tallest in the row */
+.grid-2{align-items:start}
 
 /* ---------- stack ---------- */
 .stackgrid{display:grid;gap:26px 34px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
@@ -646,7 +654,7 @@ footer .shell{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap
   <div class="shell">
     <div class="eyebrow"><b>03</b> — Selected Projects</div>
     <div class="head rv">
-      <h2><br>Other things I build</br></h2>
+      <h2>Other things<br>I build.</h2>
     </div>
     <div class="grid-2">
       <article class="card rv">
@@ -706,15 +714,11 @@ footer .shell{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap
         <div class="card-body">
           <h3>Publication</h3>
           <div class="meta"><span>ICLR Workshop</span><span>2022</span></div>
-          <div class="pubrow" style="border:0;padding:0">
-            <div>
-              <h3 style="font-size:1.05rem">
-                <a href="https://arxiv.org/abs/2208.09941" target="_blank" rel="noopener">Hate Speech and Offensive Language Detection in Ethiopian Languages</a>
-              </h3>
-              <div class="aut">Cuong Nguyen, Daniel Nkemelu, <b>Ankit Mehta</b>, Michael Best</div>
-              <div class="ven">ICLR Workshop 2022 · arXiv:2208.09941</div>
-            </div>
-          </div>
+          <h3 class="pubtitle">
+            <a href="https://arxiv.org/abs/2208.09941" target="_blank" rel="noopener">Hate Speech and Offensive Language Detection in Ethiopian Languages</a>
+          </h3>
+          <p class="aut">Cuong Nguyen, Daniel Nkemelu, <b>Ankit Mehta</b>, Michael Best</p>
+          <p class="ven">ICLR Workshop 2022 · arXiv:2208.09941</p>
           <div class="links">
             <a href="https://scholar.google.com/citations?user=VQWRzKwAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
           </div>
