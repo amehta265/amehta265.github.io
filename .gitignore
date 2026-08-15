@@ -1,0 +1,58 @@
+# Ignore everything by default, then allow only what the site actually serves.
+# Rationale: the raw source material in assets/ is ~530 MB and one file exceeds
+# GitHub's 100 MB hard limit. Only the compressed derivatives get published.
+
+*
+
+!.gitignore
+!.nojekyll
+!README.md
+!CNAME
+
+# GitHub Pages ALWAYS serves index.html at the site root. You cannot make a
+# differently-named file the homepage by editing this file. To change designs,
+# copy the variant OVER index.html. index.html must stay tracked.
+!index.html
+
+# Design variants — kept on disk for reference, never published.
+index-dark.html
+index-light.html
+index-robot.html
+
+# Local working notes — these name the unannounced project codename and must
+# NOT reach a public repo. Keep them on disk, keep them out of git.
+#   DEPLOY.md  CONTENT_NEEDED.md  MAINTENANCE.md
+
+!assets/
+assets/*
+!assets/Ankit_Mehta_CV.pdf
+
+!assets/img/
+!assets/img/**
+!assets/video/
+!assets/video/**
+!assets/slides/
+!assets/slides/**
+
+# Raw drops that landed inside assets/img|video/ — sources, not deliverables
+assets/video/thesis_model_new.mp4
+assets/video/thesis_bridge.mp4
+assets/img/new_heashot.jpeg
+
+# Figures cut in the rewrite. Nothing links to them; keep them off the wire.
+assets/img/figures/iva_cleancomparison.jpg
+assets/img/figures/iva_features.jpg
+assets/img/figures/swarm_belief_log.jpg
+assets/img/figures/thesis_bridge.jpg
+
+# Never publish: raw recordings, source slides, unedited photos, brand kits
+assets/*.mp4
+assets/IVA_LAB_Slides/
+assets/hobbies/
+assets/logos/
+assets/cradle_project_writeup.md
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp

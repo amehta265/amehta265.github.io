@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ankit Mehta — Robotics</title>
+<meta name="author" content="Ankit Mehta">
+<meta name="description" content="Ankit Mehta — M.S. Robotics at Georgia Tech. Safe bedside manipulation for geriatric care, planning under uncertainty, multi-agent coordination.">
+<meta property="og:title" content="Ankit Mehta — Robotics">
+<meta property="og:description" content="M.S. Robotics @ Georgia Tech. Safe manipulation near the human body, planning under uncertainty, multi-agent coordination.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/poster_dynamicgap.jpg">
+<meta name="theme-color" content="#0b0c0e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   PALETTE
+   ============================================================ */
+:root{
+  --bg:#0b0c0e;
+  --surface:#131519;
+  --surface-2:#181b20;
+  --line:rgba(255,255,255,.09);
+  --line-strong:rgba(255,255,255,.18);
+  --fg:#f2f5f6;
+  --fg-2:#9ba3ab;
+  --fg-3:#6b7480;
+  --accent:#c6f24e;
+  --accent-dim:rgba(198,242,78,.14);
+
+  --display:'Space Grotesk',-apple-system,BlinkMacSystemFont,sans-serif;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --pad:clamp(20px,5vw,72px);
+  --maxw:1240px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--fg-2);font-family:var(--sans);
+  font-size:16px;line-height:1.68;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,video{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--accent);color:#0b0c0e}
+
+.shell{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad)}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{font-family:var(--display);color:var(--fg);font-weight:600;line-height:1.05;
+  letter-spacing:-.03em}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--fg-3);display:flex;align-items:center;gap:10px;margin-bottom:26px}
+.eyebrow::before{content:"";width:6px;height:6px;background:var(--accent);
+  border-radius:50%;flex:0 0 6px}
+.eyebrow b{color:var(--accent);font-weight:500}
+
+/* ---------- nav ---------- */
+#nav{position:fixed;inset:0 0 auto 0;z-index:50;transition:background .3s,border-color .3s,backdrop-filter .3s;
+  border-bottom:1px solid transparent}
+#nav.stuck{background:rgba(11,12,14,.82);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+#nav .shell{display:flex;align-items:center;gap:28px;height:70px}
+#brand{font-family:var(--display);font-weight:700;font-size:16.5px;color:var(--fg);letter-spacing:-.02em}
+#brand span{color:var(--accent)}
+#navlinks{margin-left:auto;display:flex;gap:26px}
+#navlinks a{font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--fg-3);transition:color .2s;position:relative;padding:4px 0}
+#navlinks a:hover{color:var(--fg)}
+#navlinks a.on{color:var(--accent)}
+#navlinks a.on::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--accent)}
+.cta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+  border:1px solid var(--line-strong);border-radius:999px;padding:9px 17px;color:var(--fg);
+  transition:background .2s,color .2s,border-color .2s;white-space:nowrap}
+.cta:hover{background:var(--accent);color:#0b0c0e;border-color:var(--accent)}
+#burger{display:none;margin-left:auto;background:none;border:1px solid var(--line-strong);
+  border-radius:8px;width:38px;height:34px;cursor:pointer;color:var(--fg);font-size:15px}
+
+/* ---------- hero ---------- */
+#hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;
+  padding-block:120px 56px;overflow:hidden}
+#hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  /* the source is a white-background RViz capture; inverting it turns the
+     diagram into glowing traces on black, which suits the dark page */
+  filter:invert(1) hue-rotate(180deg) saturate(.75) contrast(1.05);
+  opacity:.34}
+#hero .scrim{position:absolute;inset:0;
+  background:
+    radial-gradient(1100px 620px at 78% 18%,rgba(198,242,78,.11),transparent 62%),
+    linear-gradient(180deg,var(--bg) 0%,rgba(11,12,14,.55) 38%,rgba(11,12,14,.93) 82%,var(--bg) 100%)}
+#hero .shell{position:relative;width:100%}
+#hero h1{font-size:clamp(3.1rem,12.5vw,10rem);line-height:.86;letter-spacing:-.045em;font-weight:700}
+#hero h1 em{font-style:normal;display:block;color:var(--fg-3)}
+.hero-sub{margin-top:30px;max-width:47ch;font-size:clamp(15px,1.7vw,18.5px);color:var(--fg-2)}
+.hero-sub b{color:var(--fg);font-weight:600}
+.hero-act{margin-top:34px;display:flex;flex-wrap:wrap;gap:11px}
+.hero-act .cta.solid{background:var(--accent);color:#0b0c0e;border-color:var(--accent)}
+.hero-act .cta.solid:hover{background:transparent;color:var(--accent)}
+.scroll-cue{position:absolute;right:var(--pad);bottom:56px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--fg-3);display:flex;align-items:center;gap:9px}
+.scroll-cue i{width:1px;height:34px;background:linear-gradient(var(--accent),transparent);display:block}
+@media (max-width:760px){.scroll-cue{display:none}}
+
+/* ---------- marquee ---------- */
+#ticker{border-block:1px solid var(--line);overflow:hidden;padding:15px 0;background:var(--surface)}
+#ticker .row{display:flex;gap:44px;width:max-content;animation:slide 42s linear infinite}
+#ticker span{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--fg-3);display:flex;align-items:center;gap:44px;white-space:nowrap}
+#ticker span::after{content:"◆";color:var(--accent);font-size:8px}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* ---------- stat band ---------- */
+#band{border-bottom:1px solid var(--line)}
+#band .shell{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--pad);padding-block:56px}
+#band .n{font-family:var(--display);font-size:clamp(2.1rem,4.4vw,3.4rem);color:var(--accent);
+  line-height:1;letter-spacing:-.03em;font-weight:700}
+#band .l{margin-top:11px;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--fg-3);line-height:1.6}
+@media (max-width:820px){#band .shell{grid-template-columns:repeat(2,1fr);gap:34px 20px;padding-block:40px}}
+
+/* ---------- sections ---------- */
+section.blk{padding-block:clamp(70px,10vw,140px);position:relative}
+section.blk + section.blk{border-top:1px solid var(--line)}
+.head{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:56px}
+.head h2{font-size:clamp(2rem,5.2vw,3.7rem)}
+.head p{max-width:56ch;font-size:clamp(15px,1.6vw,17.5px)}
+@media (min-width:900px){
+  .head{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:44px;align-items:end}
+}
+
+/* ---------- about ---------- */
+#about .cols{display:grid;gap:26px}
+@media (min-width:900px){#about .cols{grid-template-columns:1fr 1fr;gap:26px 54px}}
+#about p{font-size:16.5px}
+#about p b{color:var(--fg);font-weight:600}
+.portrait{border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+.portrait img{width:100%;aspect-ratio:1;object-fit:cover;filter:saturate(.92)}
+
+/* ---------- cards ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;
+  transition:border-color .3s,transform .3s,background .3s}
+.card:hover{border-color:var(--line-strong);background:var(--surface-2)}
+.card-body{padding:clamp(22px,3.4vw,40px)}
+.card h3{font-size:clamp(1.4rem,2.9vw,2.05rem);margin-bottom:12px}
+.card .meta{font-family:var(--mono);font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--fg-3);margin-bottom:20px;display:flex;flex-wrap:wrap;gap:8px 14px}
+.card .meta a{color:var(--fg-2);border-bottom:1px solid var(--line-strong)}
+.card .meta a:hover{color:var(--accent);border-color:var(--accent)}
+.card p{font-size:15.6px}
+.card p + p{margin-top:13px}
+.pill{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  padding:4px 10px;border-radius:999px;white-space:nowrap}
+.pill.live{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(198,242,78,.32)}
+.pill.hush{background:rgba(255,255,255,.06);color:var(--fg-2);border:1px solid var(--line-strong)}
+
+.sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin:28px 0 9px}
+.tags{margin-top:22px;display:flex;flex-wrap:wrap;gap:7px}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;color:var(--fg-3);
+  border:1px solid var(--line);border-radius:6px;padding:5px 10px}
+.links{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px}
+.links a{font-family:var(--mono);font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+  border:1px solid var(--line-strong);border-radius:999px;padding:8px 15px;color:var(--fg);
+  transition:.2s}
+.links a:hover{background:var(--accent);color:#0b0c0e;border-color:var(--accent)}
+.links .off{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--fg-3);
+  padding:8px 0}
+
+/* media inside cards */
+.shot{background:#000;border-block:1px solid var(--line);position:relative}
+.shot video,.shot img{width:100%;display:block}
+.shot .cap{padding:14px clamp(22px,3.4vw,40px);font-size:13px;color:var(--fg-3);
+  background:var(--surface);border-top:1px solid var(--line)}
+.duo{display:grid;gap:1px;background:var(--line)}
+@media (min-width:700px){.duo{grid-template-columns:1fr 1fr}}
+.duo figure{margin:0;background:#000}
+.duo .cap{padding:12px 16px;font-size:12.5px}
+
+/* metric strip inside a card */
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:26px}
+.metrics div{background:var(--bg);padding:17px 16px}
+.metrics .n{font-family:var(--display);font-size:1.65rem;color:var(--accent);line-height:1;font-weight:700;
+  letter-spacing:-.02em}
+.metrics .l{margin-top:7px;font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--fg-3);line-height:1.55}
+@media (max-width:620px){.metrics{grid-template-columns:1fr}}
+
+.stack-cards{display:grid;gap:18px}
+.grid-2{display:grid;gap:18px}
+@media (min-width:900px){.grid-2{grid-template-columns:1fr 1fr}}
+
+/* ---------- timeline ---------- */
+.tl{border-top:1px solid var(--line)}
+.tl-row{display:grid;grid-template-columns:1fr;gap:6px;padding:26px 0;border-bottom:1px solid var(--line);
+  transition:background .25s;position:relative}
+.tl-row:hover{background:var(--surface)}
+@media (min-width:820px){
+  .tl-row{grid-template-columns:150px 46px 1fr 1fr;gap:26px;align-items:baseline}
+}
+.tl-date{font-family:var(--mono);font-size:11px;letter-spacing:.09em;color:var(--fg-3);white-space:nowrap}
+.tl-logo{width:38px;height:30px;display:flex;align-items:center;justify-content:center}
+.tl-logo img{max-width:100%;max-height:100%;object-fit:contain;filter:grayscale(1) brightness(2.4);opacity:.72}
+.tl-row h3{font-size:1.12rem;letter-spacing:-.01em}
+.tl-role{font-size:14.5px;color:var(--fg-2)}
+.tl-note{font-size:14px;color:var(--fg-3);margin-top:6px;grid-column:1/-1}
+@media (min-width:820px){.tl-note{grid-column:3/-1;margin-top:8px}}
+
+/* ---------- publications ---------- */
+.pubrow{display:grid;gap:6px;padding:26px 0;border-top:1px solid var(--line)}
+@media (min-width:820px){.pubrow{grid-template-columns:60px 1fr;gap:26px}}
+.pubrow .idx{font-family:var(--mono);font-size:11px;color:var(--accent)}
+.pubrow h3{font-size:1.12rem;line-height:1.4}
+.pubrow h3 a:hover{color:var(--accent)}
+.pubrow .aut{font-size:14px;color:var(--fg-2);margin-top:8px}
+.pubrow .aut b{color:var(--fg)}
+.pubrow .ven{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--fg-3);margin-top:6px}
+
+/* ---------- stack ---------- */
+.stackgrid{display:grid;gap:26px 34px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.stackgrid h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:13px;font-weight:500}
+.stackgrid ul{list-style:none}
+.stackgrid li{font-size:14.5px;padding:3px 0;color:var(--fg-2)}
+
+/* ---------- gallery ---------- */
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.gal button{padding:0;border:1px solid var(--line);background:var(--surface);border-radius:12px;
+  overflow:hidden;cursor:zoom-in;display:block;width:100%;aspect-ratio:1;line-height:0;
+  transition:border-color .25s}
+.gal button:hover{border-color:var(--accent)}
+.gal img,.gal video{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;
+  filter:saturate(.94)}
+.gal button:hover img{transform:scale(1.06)}
+.gal .wide{grid-column:span 2;aspect-ratio:2}
+@media (max-width:620px){.gal{grid-template-columns:repeat(2,1fr)}}
+#lb{position:fixed;inset:0;background:rgba(5,6,7,.95);display:none;align-items:center;
+  justify-content:center;z-index:99;padding:24px;cursor:zoom-out}
+#lb.on{display:flex}
+#lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px}
+
+/* ---------- contact ---------- */
+#contact{text-align:center;padding-block:clamp(80px,12vw,170px)}
+#contact h2{font-size:clamp(2.2rem,8vw,5.6rem);letter-spacing:-.045em}
+#contact h2 a:hover{color:var(--accent)}
+#contact .sub2{margin:22px auto 0;max-width:44ch;font-size:16.5px}
+#contact .row{margin-top:36px;display:flex;flex-wrap:wrap;gap:11px;justify-content:center}
+
+footer{border-top:1px solid var(--line);padding-block:26px}
+footer .shell{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3)}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.2,.8,.3,1),transform .7s cubic-bezier(.2,.8,.3,1)}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- inquiry bot ---------- */
+#bot{position:fixed;right:22px;bottom:22px;z-index:60;display:flex;align-items:flex-end;gap:10px}
+#bot-bubble{background:var(--surface-2);border:1px solid var(--line-strong);border-radius:12px 12px 2px 12px;
+  padding:9px 13px;font-size:12.5px;color:var(--fg-2);max-width:186px;line-height:1.45;
+  transition:opacity .3s,transform .3s}
+#bot-bubble b{color:var(--accent);font-weight:500}
+#bot.open #bot-bubble{opacity:0;transform:translateY(6px);pointer-events:none}
+#bot-btn{width:62px;height:62px;flex:0 0 62px;border-radius:17px;border:1px solid var(--line-strong);
+  background:var(--surface-2);cursor:pointer;padding:0;display:grid;place-items:center;
+  transition:transform .2s,border-color .2s,box-shadow .2s}
+#bot-btn:hover{transform:translateY(-2px);border-color:var(--accent);
+  box-shadow:0 0 0 4px var(--accent-dim)}
+#bot-btn svg{width:42px;height:42px;overflow:visible}
+.eye{fill:var(--accent);transition:transform .12s linear}
+.lid{fill:var(--surface-2)}
+#bot-panel{position:fixed;right:22px;bottom:96px;z-index:61;width:340px;max-width:calc(100vw - 44px);
+  background:var(--surface);border:1px solid var(--line-strong);border-radius:16px;
+  box-shadow:0 24px 60px rgba(0,0,0,.6);overflow:hidden;display:none;flex-direction:column}
+#bot-panel.on{display:flex;animation:rise .3s cubic-bezier(.2,.9,.3,1)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#bot-top{display:flex;align-items:center;gap:9px;padding:14px;border-bottom:1px solid var(--line)}
+#bot-top .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:0 0 7px;
+  box-shadow:0 0 0 3px var(--accent-dim)}
+#bot-top h4{font-size:13.5px;font-family:var(--sans);font-weight:600;letter-spacing:0}
+#bot-top span{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--fg-3);display:block;margin-top:3px}
+#bot-close{margin-left:auto;border:0;background:none;cursor:pointer;color:var(--fg-3);
+  font-size:20px;line-height:1;padding:2px 4px}
+#bot-close:hover{color:var(--fg)}
+#bot-log{padding:14px;display:flex;flex-direction:column;gap:9px;max-height:196px;overflow-y:auto}
+.msg{font-size:13px;line-height:1.5;padding:9px 12px;border-radius:12px;max-width:87%}
+.msg.bot{background:var(--surface-2);color:var(--fg-2);border:1px solid var(--line);
+  border-bottom-left-radius:3px;align-self:flex-start}
+.msg.me{background:var(--accent);color:#0b0c0e;border-bottom-right-radius:3px;align-self:flex-end;font-weight:500}
+#bot-form{padding:0 14px 14px;display:flex;flex-direction:column;gap:8px}
+#bot-form input,#bot-form textarea{width:100%;font:inherit;font-size:13px;color:var(--fg);
+  border:1px solid var(--line-strong);border-radius:9px;padding:9px 11px;background:var(--bg);resize:vertical}
+#bot-form textarea{min-height:66px}
+#bot-form ::placeholder{color:var(--fg-3)}
+#bot-form input:focus,#bot-form textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+#bot-send{background:var(--accent);color:#0b0c0e;border:0;border-radius:9px;padding:10px;
+  font:inherit;font-size:12px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  font-weight:700;cursor:pointer}
+#bot-send:hover{filter:brightness(1.1)}
+#bot-send:disabled{opacity:.5;cursor:default}
+
+/* ---------- responsive ---------- */
+@media (max-width:860px){
+  #navlinks{position:fixed;inset:70px 0 auto 0;background:rgba(11,12,14,.97);backdrop-filter:blur(14px);
+    flex-direction:column;gap:0;padding:10px 0 18px;border-bottom:1px solid var(--line);display:none}
+  #navlinks.open{display:flex}
+  #navlinks a{padding:13px var(--pad);font-size:12.5px}
+  #navlinks a.on::after{display:none}
+  #burger{display:block}
+  #nav .cta{display:none}
+  #nav{background:rgba(11,12,14,.82);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+}
+@media (max-width:620px){
+  #bot-bubble{display:none}
+  #bot-panel{right:12px;left:12px;width:auto;bottom:88px}
+  #bot{right:14px;bottom:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none;transition:none}
+  #ticker .row{animation:none}
+  *{transition-duration:.01ms!important}
+}
+@media print{
+  #nav,#bot,#bot-panel,#ticker,.scroll-cue,#lb,.gal{display:none}
+  body{background:#fff;color:#000}
+  #hero{min-height:auto} #hero video{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<header id="nav">
+  <div class="shell">
+    <a id="brand" href="#hero">ANKIT MEHTA<span>.</span></a>
+    <button id="burger" type="button" aria-label="Menu" aria-expanded="false">≡</button>
+    <nav id="navlinks">
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#stack">Stack</a>
+      <a href="#outside">Outside</a>
+    </nav>
+    <a class="cta" href="#contact">Get in touch</a>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section id="hero">
+  <video src="assets/video/dynamicgap.mp4" poster="assets/img/poster_dynamicgap.jpg"
+         autoplay loop muted playsinline aria-hidden="true"></video>
+  <div class="scrim"></div>
+  <div class="shell">
+    <h1>ANKIT<em>MEHTA</em></h1>
+    <p class="hero-sub">
+      <b>M.S. Robotics, Georgia Tech.</b> I am working on robots that need to act in occulated environments -
+      when the model of the world is incomplete.
+    </p>
+    <div class="hero-act">
+      <a class="cta solid" href="#research">See the research</a>
+      <a class="cta" href="assets/Ankit_Mehta_CV.pdf" target="_blank" rel="noopener">Download CV</a>
+    </div>
+  </div>
+  <div class="scroll-cue"><span>Scroll</span><i></i></div>
+</section>
+
+<!-- ================= TICKER ================= -->
+<div id="ticker" aria-hidden="true">
+  <div class="row">
+    <span>Motion planning under uncertainty</span><span>Covariance intersection</span>
+    <span>Safe physical human–robot interaction</span><span>ROS 2</span>
+    <span>Isaac Sim</span><span>Imitation learning</span><span>Legged locomotion</span>
+    <span>Gap-based navigation</span><span>C++20</span>
+    <span>Motion planning under uncertainty</span><span>Covariance intersection</span>
+    <span>Safe physical human–robot interaction</span><span>ROS 2</span>
+    <span>Isaac Sim</span><span>Imitation learning</span><span>Legged locomotion</span>
+    <span>Gap-based navigation</span><span>C++20</span>
+  </div>
+</div>
+
+<!-- ================= STAT BAND ================= -->
+<div id="band">
+  <div class="shell">
+    <div class="rv"><div class="n">−30%</div><div class="l">Collision events,<br>under GRU based planner</div></div>
+    <div class="rv"><div class="n">922K</div><div class="l">Training samples,<br>gap density model</div></div>
+    <div class="rv"><div class="n">10s</div><div class="l">Time to target,<br>decentralised search</div></div>
+    <div class="rv"><div class="n">3 yrs</div><div class="l">Production software<br>before research</div></div>
+  </div>
+</div>
+
+<!-- ================= ABOUT ================= -->
+<section class="blk" id="about">
+  <div class="shell">
+    <div class="eyebrow"><b>01</b> — About</div>
+    <div class="head rv">
+      <h2>From a software developer<br>to<br>robotics engineering.</h2>  
+      <p>Studying Controls, Dynamics, and Machine Learning to create congruent robots that
+        assimilate and integrate into our daily lives.</p>
+    </div>
+    <div class="cols rv">
+      <div>
+        <p>
+          Born and brought in Nairobi, Kenya I spent the last three years working at NCR Voyix, ATL USA, building
+          production-grade merchandising, inventory, point-of-sale, and payments architecture serving
+          multiple retailers in North America.
+          I graduated with a B.S. Comp Sci from Georgia Tech in 2023 and I have now returned to pursue -
+          what I believe to be the next jump in technological advancement - a M.S. Robotics! I am excited
+          to apply my test-driven, always curious mind to solve complex, multi-step problems in controls,
+          dynamics, mechanics, machine learning, and HRI.
+        </p>
+        <p>
+          I am working with the IVA Lab on gap cost functions (endpoint
+          proximity and width clearance), density features for a GRU-based planner, and Kalman filter
+          optimizations for motion and planning related tasks in dynamic environments.
+        </p>
+        <p>
+          Outside of lab work I am building a geriatric, bed-side, caregiving robot. My main research focus is
+          on evaluating shear stress requirements for garment manipulation and then implementing a consent-gated
+          system through irreversible intermediate steps.
+        </p>
+      </div>
+      <div class="portrait"><img src="assets/img/headshot.jpg" alt="Ankit Mehta" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RESEARCH ================= -->
+<section class="blk" id="research">
+  <div class="shell">
+    <div class="eyebrow"><b>02</b> — Research</div>
+    <div class="head rv">
+      <h2>Five threads,<br>one question.</h2>
+      <p>How does a machine act safely when its model of the world is wrong,
+         incomplete, or about to go stale?</p>
+    </div>
+
+    <div class="stack-cards">
+
+      <!-- geriatric -->
+      <article class="card rv">
+        <div class="card-body">
+          <h3>Safe Bedside Manipulation in Geriatric Care</h3>
+          <div class="meta">
+            <span class="pill hush">Unannounced</span>
+            <span>Solo research project</span><span>Georgia Tech</span><span>Aug 2026 — Apr 2027</span>
+          </div>
+          <p>
+            A simulated two-arm robot helps a caregiver change an incontinence brief on a care
+            bed. The robot assists. It does not replace the caregiver.
+          </p>
+          <p>
+            Most safety work bounds the force pushed into a surface. For aging skin that is the
+            wrong quantity. Skin tears from sideways drag well below the push limit. Sliding a
+            brief out from under a body is drag. So I estimate shear in real time and check it
+            against a second sensor in the bed. Furthermore I am attempting to design a care-giving
+            bed that works in conjunction with the robot.
+          </p>
+          <p>
+            The recovery system also has to know which steps it can undo. Stopping is not always
+            the safe move.
+          </p>
+          <div class="metrics">
+            <div><div class="n">2 / 19</div><div class="l">Sprints done, both early</div></div>
+            <div><div class="n">12</div><div class="l">Decision records written</div></div>
+            <div><div class="n">12 GB</div><div class="l">GPU budget. One laptop.</div></div>
+          </div>
+        </div>
+        <div class="shot">
+          <video src="assets/video/thesis_model.mp4" poster="assets/img/poster_thesis_model.jpg"
+                 autoplay loop muted playsinline></video>
+          <div class="cap">Sprint 2. The simulator and the robot-description tools read one model,
+            so both views move together. Building it surfaced three bugs. One let an arm pass
+            through its own torso!</div>
+        </div>
+        <div class="card-body" style="padding-top:0">
+          <div class="tags">
+            <span class="tag">Isaac Sim / Isaac Lab</span><span class="tag">ROS 2</span>
+            <span class="tag">C++20</span><span class="tag">Safety-Critical Control</span>
+            <span class="tag">Deformable Manipulation</span>
+          </div>
+          <div class="links"><span class="off">Code and write-up stay private for now.</span></div>
+        </div>
+      </article>
+
+      <!-- IVA -->
+      <article class="card rv">
+        <div class="card-body">
+          <h3>Learned Gap Density Estimation for Reactive Navigation</h3>
+          <div class="meta">
+            <a href="https://ivalab.gatech.edu/" target="_blank" rel="noopener">IVA Lab</a>
+            <span>Advisor: Abdel Zaro</span><span>May 2026 — Present</span>
+          </div>
+          <p>
+            Dynamic Gap steers a robot through the gaps between pedestrians. Its Kalman filter
+            assumes linear obstacle motion. It also puts false velocity on static obstacles. We
+            have explored using a GRU to correct this behavior.
+          </p>
+          <p>
+            Density alone is a snapshot. In one collision the chosen gap went from 0.12 to 2.79
+            in six planning cycles. By then the robot had committed. So I added two features. One
+            is the rate of change of density. The other is aspect ratio, 1/θ, which tells a
+            corridor apart from an opening.
+          </p>
+          <p>
+            For one experiment, I ran three configurations over 50 episodes each. With the planner config held fixed,
+            the future-density model cut collision events by 30%. The goal rate rose from 53% to
+            67%. No episode got worse.
+          </p>
+          <div class="metrics">
+            <div><div class="n">−30%</div><div class="l">Collision events</div></div>
+            <div><div class="n">53 → 67%</div><div class="l">Goal rate, hardest episodes</div></div>
+            <div><div class="n">0</div><div class="l">Episodes regressed</div></div>
+          </div>
+        </div>
+        <div class="shot">
+          <video src="assets/video/dynamicgap.mp4" poster="assets/img/poster_dynamicgap.jpg"
+                 autoplay loop muted playsinline></video>
+          <div class="cap">Candidate trajectories through each gap. The purple arc is the selected
+            one. Each gap shows its predicted and true density.</div>
+        </div>
+        <div class="card-body" style="padding-top:0">
+          <div class="sub">The useful result was a failure</div>
+          <p>
+            Predictions tracked ground truth. Navigation still got worse. Walls carry near-zero
+            density, so minimising it pulled the robot into them. The planner also blew its
+            10 Hz compute budget and fell back to idling. Neither problem was in the network.
+            Retuning three planner weights cut the mean path from 52.7 m to 30.0 m.
+          </p>
+          <p>
+            I also rewrote two gap cost functions. The old width term had no ceiling and reached
+            540 at a 1 mm gap. It now rejects gaps the robot cannot fit through, then prices
+            the clearance that is left.
+          </p>
+        </div>
+        <div class="duo">
+          <figure>
+            <img src="assets/img/figures/iva_headtohead.jpg" alt="Results across three planner configurations" loading="lazy">
+            <div class="cap">Fifty episodes each. No configuration wins every row.</div>
+          </figure>
+          <figure>
+            <img src="assets/img/figures/iva_zonemap.jpg" alt="Benchmark with sixty-five pedestrians in five zones" loading="lazy">
+            <div class="cap">A 65-pedestrian benchmark I built. Each zone stresses one skill.</div>
+          </figure>
+        </div>
+        <div class="card-body" style="padding-top:26px">
+          <div class="tags">
+            <span class="tag">Motion Planning</span><span class="tag">State Estimation</span>
+            <span class="tag">GRU</span><span class="tag">Cost Design</span>
+            <span class="tag">ROS</span><span class="tag">C++</span>
+          </div>
+          <div class="links">
+            <a href="assets/slides/gru_density_evaluation.pdf" target="_blank" rel="noopener">Evaluation deck</a>
+            <a href="assets/slides/gap_cost_functions.pdf" target="_blank" rel="noopener">Cost function deck</a>
+            <a href="https://github.com/ivaROS/DynamicGap/tree/feat/density-change-and-aspect-ratio" target="_blank" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- swarm -->
+      <article class="card rv">
+        <div class="card-body">
+          <h3>Decentralised Two-Quadruped Search and Rescue</h3>
+          <div class="meta"><span>Independent project</span><span>Georgia Tech</span><span>Jun 2026 — Present</span></div>
+          <p>
+            Two quadrupeds search an 11 m arena of 18 trees for a moving target. There is no
+            central controller and no shared memory. Each agent has its own gait control, eight IR
+            rays, and a private belief. They exchange belief over UDP at 10 Hz and fuse it by
+            covariance intersection.
+          </p>
+          <div class="metrics">
+            <div><div class="n">10s / 12s</div><div class="l">Time to find, each agent</div></div>
+            <div><div class="n">&lt; 0.2</div><div class="l">Track uncertainty over 120 s</div></div>
+            <div><div class="n">0</div><div class="l">Collisions in the tree field</div></div>
+          </div>
+        </div>
+        <div class="duo">
+          <figure>
+            <video src="assets/video/swarm_search.mp4" poster="assets/img/poster_swarm_search.jpg"
+                   autoplay loop muted playsinline></video>
+            <div class="cap">Both agents sweeping the forest.</div>
+          </figure>
+          <figure>
+            <video src="assets/video/swarm_target.mp4" poster="assets/img/poster_swarm_target.jpg"
+                   autoplay loop muted playsinline></video>
+            <div class="cap">A second run, closing on the target.</div>
+          </figure>
+        </div>
+        <div class="card-body">
+          <p>
+            So far, I've found and fixed six defects. Most originated from unexpected places.
+            One check decided when the robot could say it had found the target. It mixed position uncertainty with 
+            speed uncertainty, and speed uncertainty is always far larger. The total never fell below the threshold, so
+            the robot kept reporting a search it had already finished.
+          </p>
+          <p>
+            Frontier navigation also failed and a fixed waypoint approach replaced it. That works in this
+            arena. It cannot work in an unexplored one so fixing that is the next problem.
+          </p>
+          <div class="tags">
+            <span class="tag">Multi-Agent Systems</span><span class="tag">Covariance Intersection</span>
+            <span class="tag">Legged Locomotion</span><span class="tag">PyBullet</span>
+          </div>
+          <div class="links">
+            <a href="https://amehta265.github.io/swarm-robotics/" target="_blank" rel="noopener">Build notes</a>
+            <a href="https://github.com/amehta265/swarm-robotics" target="_blank" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
+      <div class="grid-2">
+        <!-- TID -->
+        <article class="card rv">
+          <div class="card-body">
+            <h3>Hate Speech and MisInformation Detection in Low-Resource Languages</h3>
+            <div class="meta">
+              <a href="https://tid.gatech.edu/" target="_blank" rel="noopener">TID Lab</a>
+              <span>Prof. Michael L. Best</span><span>2021 — 2023</span>
+            </div>
+            <p>
+              Ethiopian languages have little labelled data. Pretrained models handle them poorly. I
+              built a fastText classifier to separate the languages first. I then ran graphSAGE over
+              the interaction graph to find inflammatory accounts on twitter during the Ethiopian elections.
+              The work shipped into Aggie, an open-source platform used for election observation.
+            </p>
+            <div class="tags">
+              <span class="tag">NLP</span><span class="tag">Graph Neural Networks</span>
+            </div>
+            <div class="links">
+              <a href="https://arxiv.org/abs/2208.09941" target="_blank" rel="noopener">Paper</a>
+              <a href="https://github.com/TID-Lab/aggie" target="_blank" rel="noopener">Aggie</a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section class="blk" id="projects">
+  <div class="shell">
+    <div class="eyebrow"><b>03</b> — Selected Projects</div>
+    <div class="head rv">
+      <h2><br>Other things I build</br></h2>
+    </div>
+    <div class="grid-2">
+      <article class="card rv">
+        <div class="card-body">
+          <h3>Decision Frequency in LLM Trading Agents</h3>
+          <div class="meta"><span>Independent study</span><span>2026</span></div>
+          <p>
+            I ran one LLM agent at three decision frequencies over 2024. Five stocks, 1,585 API
+            calls. Monthly reached a Sharpe of 1.10 against 1.17 for daily. It cut maximum
+            drawdown by 36% and used 95% fewer tokens. Weekly was worst of the three.
+          </p>
+          <div class="tags"><span class="tag">LLM Agents</span><span class="tag">Backtesting</span></div>
+          <div class="links">
+            <a href="https://github.com/amehta265/refine-llm-trading-4e75-claude" target="_blank" rel="noopener">Code &amp; report</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card rv">
+        <div class="card-body">
+          <h3>Abu — Portfolio Management Chatbot</h3>
+          <div class="meta"><span class="pill live">1st place</span><span>BlackRock Challenge 2023</span></div>
+          <p>
+            A chatbot for portfolio and market questions, on the BlackRock Aladdin API. It sorts
+            holdings by sector, ranks performers, and recommends against a stated risk appetite.
+            Dialogflow handles intent. Flask serves the charts.
+          </p>
+          <div class="tags"><span class="tag">NLP</span><span class="tag">Dialogflow</span><span class="tag">Flask</span></div>
+          <div class="links">
+            <a href="https://github.com/amehta265/Abu-Finance" target="_blank" rel="noopener">Code</a>
+            <a href="https://www.youtube.com/watch?v=6PywXPO8xKc" target="_blank" rel="noopener">Demo</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card rv">
+        <div class="card-body">
+          <h3>Cypress — Open Source</h3>
+          <div class="meta"><span>Cypress.io</span><span>2022</span></div>
+          <p>
+            Shipped contributions to the test runner.
+            <a href="https://github.com/cypress-io/cypress/pull/24738" target="_blank" rel="noopener" style="color:var(--accent)">Run All Specs</a>,
+            over a recursive multi-folder spec list. The in-app Cloud integration, split across a
+            <a href="https://github.com/cypress-io/cypress/pull/25072" target="_blank" rel="noopener" style="color:var(--accent)">Debug page header</a>
+            and a
+            <a href="https://github.com/cypress-io/cypress/pull/25263" target="_blank" rel="noopener" style="color:var(--accent)">Debug spec component</a>.
+            Its GraphQL schema is generated from type definitions. A
+            <a href="https://github.com/cypress-io/cypress/pull/24346" target="_blank" rel="noopener" style="color:var(--accent)">fix</a>
+            for component hover in the command log. I also built a nightly system that tests each
+            binary against pre-release packages.
+          </p>
+          <div class="tags"><span class="tag">TypeScript</span><span class="tag">Vue</span><span class="tag">GraphQL</span></div>
+        </div>
+      </article>
+
+      <article class="card rv">
+        <div class="card-body">
+          <h3>Publication</h3>
+          <div class="meta"><span>ICLR Workshop</span><span>2022</span></div>
+          <div class="pubrow" style="border:0;padding:0">
+            <div>
+              <h3 style="font-size:1.05rem">
+                <a href="https://arxiv.org/abs/2208.09941" target="_blank" rel="noopener">Hate Speech and Offensive Language Detection in Ethiopian Languages</a>
+              </h3>
+              <div class="aut">Cuong Nguyen, Daniel Nkemelu, <b>Ankit Mehta</b>, Michael Best</div>
+              <div class="ven">ICLR Workshop 2022 · arXiv:2208.09941</div>
+            </div>
+          </div>
+          <div class="links">
+            <a href="https://scholar.google.com/citations?user=VQWRzKwAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EXPERIENCE ================= -->
+<section class="blk" id="experience">
+  <div class="shell">
+    <div class="eyebrow"><b>04</b> — Education &amp; Experience</div>
+    <div class="head rv"><h2>The path here.</h2></div>
+
+    <div class="tl rv">
+      <div class="tl-row">
+        <div class="tl-date">Aug 2026 — May 2028</div>
+        <div class="tl-logo"><img src="assets/img/logo_gt.svg" alt=""></div>
+        <div><h3>Georgia Institute of Technology</h3></div>
+        <div class="tl-role">M.S. Robotics, School of Interactive Computing</div>
+        <div class="tl-note">Concentration: Controls &amp; Perception &amp; Machine Learning</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-date">May 2026 — Present</div>
+        <div class="tl-logo"><img src="assets/img/logo_iva.png" alt=""></div>
+        <div><h3>Intelligent Vision &amp; Automation Lab</h3></div>
+        <div class="tl-role">Research Assistant</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-date">Jul 2023 — Jul 2026</div>
+        <div class="tl-logo"><img src="assets/img/logo_ncr.jpg" alt=""></div>
+        <div><h3>NCR Voyix</h3></div>
+        <div class="tl-role">Full Stack Software Engineer</div>
+        <div class="tl-note">
+          Launched a point-of-sale product for small and medium businesses. Led a TypeScript
+          payments integration across APAC and EMEA. Cut self-checkout queue wait by 23.6 s with
+          ID pre-validation.
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-date">Aug — Dec 2022</div>
+        <div class="tl-logo"><img src="assets/img/logo_cypress.svg" alt=""></div>
+        <div><h3>Cypress.io</h3></div>
+        <div class="tl-role">Software Engineering Intern</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-date">Aug 2021 — Mar 2023</div>
+        <div class="tl-logo"><img src="assets/img/logo_tid.png" alt=""></div>
+        <div><h3>TID Lab, Georgia Tech</h3></div>
+        <div class="tl-role">Undergraduate Research Assistant</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-date">Aug 2019 — May 2023</div>
+        <div class="tl-logo"><img src="assets/img/logo_gt.svg" alt=""></div>
+        <div><h3>Georgia Institute of Technology</h3></div>
+        <div class="tl-role">B.S. Computer Science</div>
+        <div class="tl-note">Artificial Intelligence &amp; Information Networks · GPA 3.79 · Highest Honors</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STACK ================= -->
+<section class="blk" id="stack">
+  <div class="shell">
+    <div class="eyebrow"><b>05</b> — Technical Stack</div>
+    <div class="head rv"><h2>What I reach for.</h2></div>
+    <div class="stackgrid rv">
+      <div><h4>Robotics</h4><ul>
+        <li>ROS · ROS 2</li><li>Isaac Sim / Isaac Lab</li><li>PyBullet · MuJoCo</li></ul></div>
+      <div><h4>Planning &amp; Estimation</h4><ul>
+        <li>Gap-based reactive planning</li><li>Kalman filtering</li>
+        <li>Covariance-intersection fusion</li><li>Trajectory cost design</li></ul></div>
+      <div><h4>Learning</h4><ul>
+        <li>PyTorch · TensorFlow</li><li>GRU / LSTM</li><li>Imitation learning</li>
+        <li>graphSAGE · BERT · fastText</li></ul></div>
+      <div><h4>Languages</h4><ul>
+        <li>Python · C++ / C</li><li>TypeScript / JavaScript</li><li>Java · Golang</li></ul></div>
+      <div><h4>Systems</h4><ul>
+        <li>Docker · Kubernetes</li><li>GCP · Pub/Sub</li><li>GraphQL · MongoDB</li></ul></div>
+      <div><h4>Interests</h4><ul>
+        <li>Safe physical human–robot interaction</li><li>Planning under uncertainty</li>
+        <li>Multi-agent coordination</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OUTSIDE ================= -->
+<section class="blk" id="outside">
+  <div class="shell">
+    <div class="eyebrow"><b>06</b> — Outside the Lab</div>
+    <div class="head rv">
+      <h2>I backpack<br>and climb.</h2>
+      <p>I like planning multi-day trips, figuring out resources required with deadlines and
+         no resupply. Love the journey, the views, and the difficultly all this brings!</p>
+    </div>
+    <p class="rv" style="max-width:70ch;margin-bottom:32px">
+      So far: Rainier, Glacier, Grand Teton, Yellowstone, Yosemite, Zion, Bryce Canyon, Great
+      Smoky Mountains, Crater Lake. The alpine trips take the most planning.
+    </p>
+    <div class="gal rv">
+      <figure class="wide"><button type="button"><img src="assets/img/hobbies/alpine_camp.jpg" alt="Tent pitched on a snowfield" loading="lazy"></button></figure>
+      <figure><button type="button"><img src="assets/img/hobbies/snowfield_crossing.jpg" alt="Climbers crossing a snowfield" loading="lazy"></button></figure>
+      <figure><button type="button"><img src="assets/img/hobbies/glacial_lake.jpg" alt="Turquoise glacial lake" loading="lazy"></button></figure>
+      <figure><button type="button"><img src="assets/img/hobbies/crater_lake.jpg" alt="Island in a caldera lake" loading="lazy"></button></figure>
+      <figure><button type="button"><img src="assets/img/hobbies/hoodoos.jpg" alt="Red rock hoodoos" loading="lazy"></button></figure>
+      <figure><button type="button"><img src="assets/img/hobbies/slot_canyon.jpg" alt="Light in a slot canyon" loading="lazy"></button></figure>
+      <figure><button type="button"><img src="assets/img/hobbies/canyon_falls.jpg" alt="Waterfall at a canyon head" loading="lazy"></button></figure>
+      <figure class="wide"><button type="button" style="cursor:default">
+        <video src="assets/video/hobbies_basin.mp4" poster="assets/img/poster_hobbies_basin.jpg"
+               autoplay loop muted playsinline></video></button></figure>
+      <figure><button type="button"><img src="assets/img/hobbies/glacier_valley.jpg" alt="Glaciated valley" loading="lazy"></button></figure>
+      <figure><button type="button"><img src="assets/img/hobbies/valley_panorama.jpg" alt="Mountain valley" loading="lazy"></button></figure>
+      <figure><button type="button"><img src="assets/img/hobbies/trail_crew.jpg" alt="Hikers at a trailhead" loading="lazy"></button></figure>
+      <figure><button type="button"><img src="assets/img/hobbies/camp_night.jpg" alt="Lit tent at night" loading="lazy"></button></figure>
+      <figure><button type="button"><img src="assets/img/hobbies/loaded_pack.jpg" alt="Loaded expedition pack" loading="lazy"></button></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="blk" id="contact">
+  <div class="shell">
+    <div class="eyebrow" style="justify-content:center"><b>07</b> — Contact</div>
+    <h2 class="rv"><a href="mailto:amehta318@gatech.edu">amehta318<wbr>@gatech.edu</a></h2>
+    <p class="sub2 rv">Open to research collaborations and robotics roles. The bot in the corner
+      also works, if that is easier.</p>
+    <div class="row rv">
+      <a class="cta solid" href="mailto:amehta318@gatech.edu">Email me</a>
+      <a class="cta" href="https://www.linkedin.com/in/ankit-h-mehta/" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="cta" href="https://github.com/amehta265" target="_blank" rel="noopener">GitHub</a>
+      <a class="cta" href="https://scholar.google.com/citations?user=VQWRzKwAAAAJ&amp;hl=en" target="_blank" rel="noopener">Scholar</a>
+      <a class="cta" href="assets/Ankit_Mehta_CV.pdf" target="_blank" rel="noopener">CV</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="shell">
+    <span>Ankit Mehta — Atlanta, GA</span>
+    <span>Last updated August 2026</span>
+  </div>
+</footer>
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="Enlarged photo"><img alt=""></div>
+
+<!-- ================= INQUIRY BOT ================= -->
+<div id="bot">
+  <div id="bot-bubble">Post inquiries here. <b>I forward them to Ankit.</b></div>
+  <button id="bot-btn" type="button" aria-label="Open the inquiry form" aria-expanded="false">
+    <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+      <line x1="22" y1="3" x2="22" y2="9" stroke="#c6f24e" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="22" cy="3" r="2.6" fill="#c6f24e"/>
+      <rect x="6" y="9" width="32" height="26" rx="8" fill="#0b0c0e" stroke="#c6f24e" stroke-width="1.7"/>
+      <rect x="1.5" y="17" width="4" height="9" rx="2" fill="#c6f24e" opacity=".45"/>
+      <rect x="38.5" y="17" width="4" height="9" rx="2" fill="#c6f24e" opacity=".45"/>
+      <g id="bot-eyes">
+        <circle class="eye" cx="15.5" cy="20" r="3.1"/>
+        <circle class="eye" cx="28.5" cy="20" r="3.1"/>
+      </g>
+      <rect id="bot-lid" class="lid" x="10" y="15" width="24" height="0" rx="1" fill="#0b0c0e"/>
+      <path d="M16 28.5 q6 4 12 0" stroke="#c6f24e" stroke-width="1.8" stroke-linecap="round" fill="none" opacity=".8"/>
+    </svg>
+  </button>
+</div>
+
+<div id="bot-panel" role="dialog" aria-modal="false" aria-label="Send an inquiry">
+  <div id="bot-top">
+    <span class="dot"></span>
+    <h4>Inquiry desk<span>Straight to Ankit's inbox</span></h4>
+    <button id="bot-close" type="button" aria-label="Close">&times;</button>
+  </div>
+  <div id="bot-log">
+    <div class="msg bot">Hello. I take messages for Ankit.</div>
+    <div class="msg bot">Ask about the research, a role, or a collaboration. He answers within a day or two.</div>
+  </div>
+  <form id="bot-form">
+    <input id="bot-email" type="email" placeholder="Your email" required autocomplete="email">
+    <textarea id="bot-msg" placeholder="Your message" required></textarea>
+    <button id="bot-send" type="submit">Send</button>
+  </form>
+</div>
+
+<script>
+(function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- nav ---------- */
+  var nav = document.getElementById('nav');
+  var burger = document.getElementById('burger');
+  var navlinks = document.getElementById('navlinks');
+  addEventListener('scroll', function () {
+    nav.classList.toggle('stuck', scrollY > 40);
+  }, { passive: true });
+  burger.addEventListener('click', function () {
+    var open = navlinks.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  navlinks.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') {
+      navlinks.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  /* ---------- scroll spy ---------- */
+  var links = [].slice.call(navlinks.querySelectorAll('a'));
+  var ids = links.map(function (a) { return a.getAttribute('href').slice(1); });
+  if ('IntersectionObserver' in window) {
+    var seen = {};
+    var so = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) seen[e.target.id] = 1; else delete seen[e.target.id];
+      });
+      for (var i = 0; i < ids.length; i++) {
+        if (seen[ids[i]]) {
+          links.forEach(function (a, j) { a.classList.toggle('on', i === j); });
+          return;
+        }
+      }
+    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+    ids.forEach(function (id) { var el = document.getElementById(id); if (el) so.observe(el); });
+  }
+
+  /* ---------- reveal ---------- */
+  if ('IntersectionObserver' in window && !reduce) {
+    var ro = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+    document.querySelectorAll('.rv').forEach(function (el) { ro.observe(el); });
+  } else {
+    document.querySelectorAll('.rv').forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* ---------- pause offscreen video ---------- */
+  if ('IntersectionObserver' in window) {
+    var vo = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var v = e.target;
+        if (e.isIntersecting) { var p = v.play(); if (p) p.catch(function () {}); }
+        else v.pause();
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('video').forEach(function (v) { vo.observe(v); });
+  }
+
+  /* ---------- lightbox ---------- */
+  var lb = document.getElementById('lb'), lbImg = lb.querySelector('img');
+  document.querySelectorAll('.gal button').forEach(function (b) {
+    var img = b.querySelector('img');
+    if (!img) return;
+    b.addEventListener('click', function () {
+      lbImg.src = img.src; lbImg.alt = img.alt; lb.classList.add('on');
+    });
+  });
+  function closeLb() { lb.classList.remove('on'); lbImg.src = ''; }
+  lb.addEventListener('click', closeLb);
+
+  /* ---------- inquiry bot ---------- */
+  /* For mail without a backend, create a free form at https://formspree.io and
+     paste the endpoint below. Left empty, this opens the visitor's mail client. */
+  var FORM_ENDPOINT = '';
+  var TO = 'amehta318@gatech.edu';
+
+  var bot = document.getElementById('bot'),
+      btn = document.getElementById('bot-btn'),
+      panel = document.getElementById('bot-panel'),
+      closeBtn = document.getElementById('bot-close'),
+      form = document.getElementById('bot-form'),
+      log = document.getElementById('bot-log'),
+      send = document.getElementById('bot-send'),
+      lid = document.getElementById('bot-lid'),
+      eyes = document.querySelectorAll('#bot-eyes .eye');
+
+  function open(v) {
+    panel.classList.toggle('on', v);
+    bot.classList.toggle('open', v);
+    btn.setAttribute('aria-expanded', v ? 'true' : 'false');
+    if (v) setTimeout(function () { document.getElementById('bot-msg').focus(); }, 120);
+  }
+  btn.addEventListener('click', function () { open(!panel.classList.contains('on')); });
+  closeBtn.addEventListener('click', function () { open(false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (panel.classList.contains('on')) open(false);
+    if (lb.classList.contains('on')) closeLb();
+  });
+
+  if (!reduce) {
+    document.addEventListener('mousemove', function (e) {
+      var r = btn.getBoundingClientRect();
+      var dx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / 260));
+      var dy = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / 260));
+      eyes.forEach(function (el) {
+        el.style.transform = 'translate(' + (dx * 1.7).toFixed(2) + 'px,' + (dy * 1.4).toFixed(2) + 'px)';
+      });
+    }, { passive: true });
+
+    (function blink() {
+      setTimeout(function () {
+        lid.setAttribute('height', '9');
+        setTimeout(function () { lid.setAttribute('height', '0'); blink(); }, 110);
+      }, 2600 + Math.random() * 4200);
+    })();
+  }
+
+  function say(cls, text) {
+    var d = document.createElement('div');
+    d.className = 'msg ' + cls; d.textContent = text;
+    log.appendChild(d); log.scrollTop = log.scrollHeight;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = document.getElementById('bot-email').value.trim();
+    var msg = document.getElementById('bot-msg').value.trim();
+    if (!email || !msg) return;
+    say('me', msg);
+    form.reset(); send.disabled = true; send.textContent = 'Sending…';
+
+    function done(ok) {
+      send.disabled = false; send.textContent = 'Send';
+      say('bot', ok ? 'Sent. Ankit will reply to ' + email + '.'
+                    : 'That did not go through. Email ' + TO + ' directly.');
+    }
+
+    if (FORM_ENDPOINT) {
+      fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, message: msg })
+      }).then(function (r) { done(r.ok); }).catch(function () { done(false); });
+    } else {
+      window.location.href = 'mailto:' + TO
+        + '?subject=' + encodeURIComponent('Inquiry from ankitmehta.dev')
+        + '&body=' + encodeURIComponent(msg + '\n\n— ' + email);
+      setTimeout(function () {
+        send.disabled = false; send.textContent = 'Send';
+        say('bot', 'Your mail client should be open. If it did not, write to ' + TO + '.');
+      }, 700);
+    }
+  });
+})();
+</script>
+</body>
+</html>
