@@ -459,7 +459,7 @@ footer .shell{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap
   <div class="shell">
     <div class="eyebrow"><b>02</b> — Research</div>
     <div class="head rv">
-      <h2>Five threads,<br>one question.</h2>
+      <h2>Six threads,<br>one question.</h2>
       <p>How does a machine act safely when its model of the world is wrong,
          incomplete, or about to go stale?</p>
     </div>
@@ -533,6 +533,79 @@ footer .shell{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap
           <div class="links">
             <a href="https://claude.ai/artifact/YZbzPTBBoTnHMMYKzdL5c9" target="_blank" rel="noopener">Interactive loop inspector</a>
             <a href="https://gtsam.org/2026/04/21/factor-graphs-and-world-models.html" target="_blank" rel="noopener">Factor graphs &amp; world models</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- conductor planner -->
+      <article class="card rv">
+        <div class="card-body">
+          <h3>Conductor: A VLM Planner That Watches Its Own Skills</h3>
+          <div class="meta">
+            <span class="pill live">In progress</span>
+            <a href="https://www.gt-rail.com/" target="_blank" rel="noopener">RAIL Lab</a>
+            <span>Prof. Sonia Chernova</span><span>Aug 2026 — Present</span>
+          </div>
+          <p>
+            “Go to the living room, pick up a glass, and place it on the kitchen table.” To a
+            person that is one task. To a Stretch 4 it is a long chain of small steps. The skills
+            that move the robot are local specialists. Each one sees only the current camera frame.
+            It has no map, no memory, and no idea of the full task.
+          </p>
+          <p>
+            So a VLM planner composes the task from a fixed library of eight primitives. It calls a
+            skill only after a grounder confirms that the object is in view and in reach. Skills are
+            objects that can be stopped, not calls that block. The planner watches each skill while
+            it runs and stops it the moment something is wrong. A monitor decides success by
+            looking. It never trusts the planner or the skill.
+          </p>
+          <div class="metrics">
+            <div><div class="n">8</div><div class="l">Primitives, closed vocabulary</div></div>
+            <div><div class="n">3</div><div class="l">Supervision tiers, by cost</div></div>
+            <div><div class="n">−180 ms</div><div class="l">Image-processing latency</div></div>
+          </div>
+        </div>
+        <div class="shot">
+          <img class="zoom" src="assets/img/figures/conductor_flow.jpg" alt="Flow of one planner episode: start-up, the per-step loop, skill supervision, and the end-of-episode memory write" loading="lazy" style="max-height:760px;object-fit:contain;background:#fff">
+          <div class="cap">One episode, end to end. Each dashed band runs at a different rate. Click to enlarge.</div>
+        </div>
+        <div class="card-body" style="padding-top:26px;padding-bottom:26px">
+          <div class="sub">Cheap checks do most of the work</div>
+          <p>
+            Each skill call declares a stop predicate, such as “glass in gripper”. The supervisor
+            checks it every tick while the skill runs. The monitor checks it again on a fresh
+            observation after the skill ends. A VLM look at every frame would cost about a second
+            and real money per check. So supervision has three tiers. A free tier runs at 10 Hz and
+            reads the skill's own status: empty grasp, stall, timeout. A grounding tier runs at
+            1 Hz and asks if the object is still in view. A VLM tier runs at 0.2 Hz, and only when
+            the planner asks for it. A test asserts that the default run makes zero model calls.
+          </p>
+        </div>
+        <div class="shot">
+          <img class="zoom" src="assets/img/figures/conductor_rates.jpg" alt="Timeline of one ten-second pick-up showing checks at the planner, free, grounding and VLM rates" loading="lazy" style="background:#fff">
+          <div class="cap">One pick-up, seen at four rates. The free tier fires on every tick. The VLM tier almost never fires.</div>
+        </div>
+        <div class="card-body" style="padding-top:26px">
+          <div class="sub">Memory that does not go stale</div>
+          <p>
+            Task memory keeps plans that worked. Each coordinate is replaced by the query that found
+            it, such as “the drinking glass on the coffee table”. The trace says what to do. The live
+            RGB-D image says where. Move the glass and the trace still applies. Global memory keeps
+            success rules and named failure modes with their recoveries, such as an empty grasp or
+            a false claim of success.
+          </p>
+          <p>
+            I also moved every Stretch 4 sensor stream across Zenoh and ROS 2 DDS, which cut
+            180 ms from image processing.
+          </p>
+          <div class="tags">
+            <span class="tag">Vision-Language Models</span><span class="tag">Task Planning</span>
+            <span class="tag">Runtime Monitoring</span><span class="tag">Robot Memory</span>
+            <span class="tag">ROS 2</span><span class="tag">Stretch 4</span>
+          </div>
+          <div class="links">
+            <a href="https://github.com/amehta265/conductor_planner" target="_blank" rel="noopener">Code</a>
+            <a href="#notes">Lab notes</a>
           </div>
         </div>
       </article>
@@ -857,6 +930,46 @@ footer .shell{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap
       <h2>Other things<br>I build.</h2>
     </div>
     <div class="grid-2">
+      <article class="card rv" style="grid-column:1/-1">
+        <div class="card-body">
+          <h3>Ball Follower on a TurtleBot3</h3>
+          <div class="meta"><span>CS 7785 · Georgia Tech</span><span>With Brian Huntley</span><span>Sep 2026</span></div>
+          <p>
+            A TurtleBot3 turns in place to keep a red ball in front of its camera. Three ROS 2 nodes
+            split the work. <code>find_object</code> runs on the robot and finds the ball in each
+            frame. It publishes the ball's pixel position in a custom <code>ObjInfo</code> message.
+            <code>rotate_robot</code> turns that offset into a turn command.
+            <code>disp_cam</code> runs on a laptop and draws the detection for debugging.
+          </p>
+          <p>
+            Red sits at both ends of the hue circle, so the detector joins two HSV bands. A
+            morphological open removes background specks. A close fills in the white print on the
+            ball. The largest contour wins. The turn rate is proportional to the pixel offset, with
+            a 20 px deadband and a 0.55 rad/s cap, so the robot slows near center and does not
+            overshoot. The camera topic keeps only the newest frame, so the controller never acts
+            on an old image.
+          </p>
+          <div class="metrics">
+            <div><div class="n">3</div><div class="l">ROS 2 nodes, robot and laptop</div></div>
+            <div><div class="n">20 px</div><div class="l">Deadband at center</div></div>
+            <div><div class="n">0.55 rad/s</div><div class="l">Turn-rate cap</div></div>
+          </div>
+        </div>
+        <div class="shot">
+          <img class="zoom" src="assets/img/figures/millhouse_ros_graph.jpg" alt="ROS 2 graph: camera bringup feeds find_object, which feeds rotate_robot on the TurtleBot3 and disp_cam on the laptop" loading="lazy" style="max-height:620px;object-fit:contain;background:#fff">
+          <div class="cap">The node graph. Everything but the debug view runs on the robot.</div>
+        </div>
+        <div class="card-body" style="padding-top:26px">
+          <div class="tags">
+            <span class="tag">ROS 2</span><span class="tag">OpenCV</span><span class="tag">Proportional Control</span>
+            <span class="tag">TurtleBot3</span><span class="tag">Python</span>
+          </div>
+          <div class="links">
+            <a href="https://github.com/amehta265/millhouse45_ws" target="_blank" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
       <article class="card rv">
         <div class="card-body">
           <h3>Decision Frequency in LLM Trading Agents</h3>
