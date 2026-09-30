@@ -133,6 +133,8 @@ section.blk + section.blk{border-top:1px solid var(--line)}
 @media (min-width:900px){#about .cols{grid-template-columns:1fr 1fr;gap:26px 54px}}
 #about p{font-size:17.5px}
 #about p b{color:var(--fg);font-weight:600}
+#about p a{color:var(--accent);border-bottom:1px solid rgba(198,242,78,.4)}
+#about p a:hover{border-color:var(--accent)}
 .portrait{border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
 .portrait img{width:100%;aspect-ratio:1;object-fit:cover;filter:saturate(.92)}
 
@@ -431,9 +433,15 @@ footer .shell{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap
           dynamics, mechanics, machine learning, and HRI.
         </p>
         <p>
-          I am working with the IVA Lab on gap cost functions (endpoint
-          proximity and width clearance), density features for a GRU-based planner, and Kalman filter
-          optimizations for motion and planning related tasks in dynamic environments.
+          I now pursue research at the <b>RAIL Lab</b> with Prof. Sonia Chernova. I build a VLM task
+          planner that helps household robots, a Stretch 4 and a Sprout humanoid, carry out long,
+          multi-step tasks and recover when a step fails. I also keep notes on this work. You can read
+          more blog entries <a href="#notes">here</a>.
+        </p>
+        <p>
+          Before that, I worked with the IVA Lab on gap cost functions (endpoint proximity and width
+          clearance), density features for a GRU-based planner, and Kalman filter optimizations for
+          motion and planning related tasks in dynamic environments.
         </p>
         <p>
           Outside of lab work I am building a geriatric, bed-side, caregiving robot. My main research focus is
